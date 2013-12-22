@@ -30,12 +30,18 @@
     <ClInclude Include="PrimeSpiral.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="PrimeCalc.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="PrimeSpiral.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PrimeCalc.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

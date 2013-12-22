@@ -3,6 +3,7 @@
 
 #include "stdafx.h"
 #include "PrimeSpiral.h"
+#include "PrimeCalc.h"
 
 #define MAX_LOADSTRING 100
 
@@ -128,6 +129,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	int wmId, wmEvent;
 	PAINTSTRUCT ps;
 	HDC hdc;
+	RECT wndRect;
 
 	switch (message)
 	{
@@ -149,7 +151,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		break;
 	case WM_PAINT:
 		hdc = BeginPaint(hWnd, &ps);
-		// TODO: Add any drawing code here...
+		GetClientRect(hWnd, &wndRect);
+		DrawPrimeSpiral(hdc, wndRect);
 		EndPaint(hWnd, &ps);
 		break;
 	case WM_DESTROY:
