@@ -60,19 +60,22 @@ POINT Center(const RECT& rect)
 
 int CalcNumber(int spiral) { return 4 * (spiral * spiral + spiral); }
 int CalcSpiral(int number) { return (int)((sqrt(number + 1) - 1) / 2); }
-POINT CalcPoint(int number)
+POINT CalcSpiralPoint(int number)
 {
-	int spiral					= CalcSpiral(number);
+	//Usually we should count from a corner. But we count from a pixel further from the corner.
+	++number;
+	int spiral					= CalcSpiral(number - 1);
 	int numberSpiralBegin		= CalcNumber(spiral);
-	int numberOffsetSpiralBegin	= number - numberSpiralBegin;
+	int spiralSize				= CalcNumber(spiral + 1) - numberSpiralBegin;
+	int numberOffsetSpiralBegin = (number - numberSpiralBegin) % spiralSize;
+	int spiralEdgeSize			= spiralSize / 4;
+	int edgeOfNumber			= numberOffsetSpiralBegin / spiralEdgeSize;
+	int numberOffsetOfCorner	= numberOffsetSpiralBegin - spiralEdgeSize * edgeOfNumber;
+
+	//Start at the bottom right corner
 	POINT pt;
 	pt.x = spiral + 1;
-	pt.y = spiral;
-	int spiralSize		= CalcNumber(spiral + 1) - numberSpiralBegin;
-	int spiralEdgeSize	= spiralSize / 4;
-	int edgeOfNumber	= numberOffsetSpiralBegin / spiralEdgeSize;
-
-	int numberOffsetOfCorner = numberOffsetSpiralBegin - spiralEdgeSize * edgeOfNumber;
+	pt.y = spiral + 1;
 	switch (edgeOfNumber)
 	{
 	case 0: //Up
@@ -95,6 +98,8 @@ POINT CalcPoint(int number)
 	return pt;
 }
 
+void AddPoint(POINT& pt1, const POINT& pt2) { pt1.x += pt2.x; pt1.y += pt2.y; }
+
 void DrawPrimeSpiral(HDC hdc, const RECT& rect)
 {
 	WndObject<HBRUSH> brush = CreateSolidBrush(RGB(0,0,0));
@@ -105,17 +110,11 @@ void DrawPrimeSpiral(HDC hdc, const RECT& rect)
 
 	int wh = max(Width(rect), Height(rect));
 	int end = wh * wh;
-	POINT pt = Center(rect);
+	POINT ptCenter = Center(rect);
 	for (int i = 0; i < end; ++i)
 	{
-		
+		POINT pt = CalcSpiralPoint(i);
+		AddPoint(pt, ptCenter);
+		SetPixel(hdc, pt.x, pt.y, RGB(255, 0, 0));
 	}
 }
-
-/*
-				17 16 15 14 13
-                18  5  4  3 12
-                19  6  1  2 11
-				20  7  8  9 10
-				21 22 23 24 25
-*/
