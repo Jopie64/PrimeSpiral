@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "PrimeCalc.h"
 #include <algorithm>
+#include <vector>
 
 using namespace std;
 
@@ -107,22 +108,25 @@ void DrawPrimeSpiral(HDC hdc, const RECT& rect)
 
 	int wh = max(Width(rect), Height(rect));
 	int end = wh * wh;
-	POINT ptCenter = Center(rect);
+	vector<unsigned char> pixelBuffer;
+	pixelBuffer.resize(end, 255);
+
+	int lastDevider = (int) sqrt(end);
+	POINT ptCenter	= Center(rect);
 	auto UseDevider = [&](int devider)
 	{
 		for (int i = devider*2; i < end; i += devider)
 		{
 			POINT pt = CalcSpiralPoint(i);
 			AddPoint(pt, ptCenter);
-			COLORREF curCol = GetPixel(hdc, pt.x, pt.y);
-			unsigned char newCol = (curCol & 0xFF) / 2;
+			unsigned char& curCol = pixelBuffer[i];
+			curCol /= 2;
 			
-			SetPixel(hdc, pt.x, pt.y, RGB(newCol, newCol, newCol));
+			SetPixel(hdc, pt.x, pt.y, RGB(curCol, curCol, curCol));
 		}
 	};
 
 	UseDevider(2);
-	int lastDevider = (int)sqrt(end);
 	for (int devider = 3; devider <= lastDevider; devider += 1)
 		UseDevider(devider);
 }
