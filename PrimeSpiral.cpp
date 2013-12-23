@@ -4,6 +4,7 @@
 #include "stdafx.h"
 #include "PrimeSpiral.h"
 #include "PrimeCalc.h"
+#include <sstream>
 
 #define MAX_LOADSTRING 100
 
@@ -152,8 +153,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case WM_PAINT:
 		hdc = BeginPaint(hWnd, &ps);
 		GetClientRect(hWnd, &wndRect);
-		DrawPrimeSpiral(hdc, wndRect);
+		DrawPrimeSpiral([&](int devider)
+		{
+			std::wostringstream s;
+			s << L"Current devider: " << devider << "...";
+			SetWindowText(hWnd, s.str().c_str());
+		}, hdc, wndRect);
 		EndPaint(hWnd, &ps);
+		SetWindowText(hWnd, L"Done.");
 		break;
 	case WM_DESTROY:
 		PostQuitMessage(0);

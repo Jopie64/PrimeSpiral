@@ -101,7 +101,7 @@ POINT CalcSpiralPoint(int number)
 
 void AddPoint(POINT& pt1, const POINT& pt2) { pt1.x += pt2.x; pt1.y += pt2.y; }
 
-void DrawPrimeSpiral(HDC hdc, const RECT& rect)
+void DrawPrimeSpiral(std::function<void (int devider)> progress, HDC hdc, const RECT& rect)
 {
 	WndObject<HBRUSH> brush = CreateSolidBrush(RGB(255,255,255));
 	FillRect(hdc, &rect, *brush);
@@ -115,6 +115,7 @@ void DrawPrimeSpiral(HDC hdc, const RECT& rect)
 	POINT ptCenter	= Center(rect);
 	auto UseDevider = [&](int devider)
 	{
+		progress(devider);
 		for (int i = devider*2; i < end; i += devider)
 		{
 			POINT pt = CalcSpiralPoint(i);
