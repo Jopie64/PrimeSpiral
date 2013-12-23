@@ -121,8 +121,8 @@ void DrawPrimeSpiral(std::function<void (int devider)> progress, HDC hdc, const 
 			POINT pt = CalcSpiralPoint(i);
 			AddPoint(pt, ptCenter);
 			unsigned char& curCol = pixelBuffer[i];
-			curCol /= 2;
-			
+			curCol *= .8;
+			//curCol = 0; //Uncomment this to just show the primes
 			SetPixel(hdc, pt.x, pt.y, RGB(curCol, curCol, curCol));
 		}
 	};
