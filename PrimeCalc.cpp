@@ -114,12 +114,15 @@ void DrawPrimeSpiral(HDC hdc, const RECT& rect)
 		{
 			POINT pt = CalcSpiralPoint(i);
 			AddPoint(pt, ptCenter);
-			SetPixel(hdc, pt.x, pt.y, RGB(0, 0, 0));
+			COLORREF curCol = GetPixel(hdc, pt.x, pt.y);
+			unsigned char newCol = (curCol & 0xFF) / 2;
+			
+			SetPixel(hdc, pt.x, pt.y, RGB(newCol, newCol, newCol));
 		}
 	};
 
 	UseDevider(2);
 	int lastDevider = (int)sqrt(end);
-	for (int devider = 3; devider <= lastDevider; devider += 2)
+	for (int devider = 3; devider <= lastDevider; devider += 1)
 		UseDevider(devider);
 }
