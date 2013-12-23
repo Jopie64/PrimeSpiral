@@ -102,19 +102,24 @@ void AddPoint(POINT& pt1, const POINT& pt2) { pt1.x += pt2.x; pt1.y += pt2.y; }
 
 void DrawPrimeSpiral(HDC hdc, const RECT& rect)
 {
-	WndObject<HBRUSH> brush = CreateSolidBrush(RGB(0,0,0));
+	WndObject<HBRUSH> brush = CreateSolidBrush(RGB(255,255,255));
 	FillRect(hdc, &rect, *brush);
-//	Sleep(1000);
-//	brush = CreateSolidBrush(RGB(255, 0, 0));
-//	FillRect(hdc, &rect, *brush);
 
 	int wh = max(Width(rect), Height(rect));
 	int end = wh * wh;
 	POINT ptCenter = Center(rect);
-	for (int i = 0; i < end; ++i)
+	auto UseDevider = [&](int devider)
 	{
-		POINT pt = CalcSpiralPoint(i);
-		AddPoint(pt, ptCenter);
-		SetPixel(hdc, pt.x, pt.y, RGB(255, 0, 0));
-	}
+		for (int i = devider*2; i < end; i += devider)
+		{
+			POINT pt = CalcSpiralPoint(i);
+			AddPoint(pt, ptCenter);
+			SetPixel(hdc, pt.x, pt.y, RGB(0, 0, 0));
+		}
+	};
+
+	UseDevider(2);
+	int lastDevider = (int)sqrt(end);
+	for (int devider = 3; devider <= lastDevider; devider += 2)
+		UseDevider(devider);
 }
